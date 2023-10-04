@@ -84,7 +84,8 @@ export const CompaniesHeader = () => {
 	const redeployCompanyContract = async () => {
 		try {
 			setIsLoadingButton(true);
-			if (chain?.id !== 137) await switchNetworkAsync?.(chains[3].id);
+			if (!chains.find(item => item.id === chain?.id))
+				await switchNetworkAsync?.(chains[3].id);
 			createCompanyWrite?.({
 				args: [
 					selectedCompany?.checksum,

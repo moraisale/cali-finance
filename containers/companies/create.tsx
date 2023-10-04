@@ -79,7 +79,8 @@ export const CreateCompanyContainer = () => {
 	const createCompany = async (company: ICompany) => {
 		try {
 			setIsLoadingButton(true);
-			if (chain?.id !== 137) await switchNetworkAsync?.(chains[3].id);
+			if (!chains.find(item => item.id === chain?.id))
+				await switchNetworkAsync?.(chains[3].id);
 			const {
 				data: { checksum, id },
 			} = await mainClient.post(MAIN_SERVICE_ROUTES.createCompany, {

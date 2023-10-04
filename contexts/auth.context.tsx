@@ -3,7 +3,9 @@ import {
 	ConnectorData,
 	useAccount,
 	useDisconnect,
+	useNetwork,
 	useSignMessage,
+	useSwitchNetwork,
 	useWalletClient,
 } from 'wagmi';
 import { setCookie, deleteCookie } from 'cookies-next';
@@ -30,8 +32,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [session, setSession] = useState(false);
 	const { isConnected, connector: activeConnector } = useAccount();
 	const toast = useToast();
-	const { data: walletClient } = useWalletClient();
-	const { disconnect } = useDisconnect();
+	const { chain } = useNetwork();
+	const { switchNetworkAsync, chains } = useSwitchNetwork();
 
 	const getNonce = async (walletNumber: `0x${string}` | undefined) => {
 		try {
@@ -92,6 +94,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	};
 
 	const handleSignIn = async (account: `0x${string}` | undefined) => {
+		if (!chains.find(item => item.id === chain?.id))
+			await switchNetworkAsync?.(137);
 		try {
 			const { nonce } = await getNonce(account);
 			const signature = await getSignature(nonce);

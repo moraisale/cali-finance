@@ -42,13 +42,9 @@ export const WalletOptionsMobile: React.FC<IWalletOptionsModal> = ({
 	const { handleSignIn } = useAuth();
 	const { isConnected, address } = useAccount();
 	const toast = useToast();
-	const { chain } = useNetwork();
-	const { chains, switchNetworkAsync } = useSwitchNetwork();
 	const { connectors, connectAsync, status } = useConnect({
 		async onSuccess(data) {
 			const account = data?.account;
-			if (chain?.id !== 137) await switchNetworkAsync?.(chains[3].id);
-
 			await handleSignIn(account);
 			onCloseLoading();
 		},
