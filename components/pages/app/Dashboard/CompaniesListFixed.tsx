@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { CompanyCard, CreateCompanyCard } from 'components';
 import { useCompanies, usePicasso } from 'hooks';
 import useTranslation from 'next-translate/useTranslation';
+import { useNetwork } from 'wagmi';
 
 export const CompaniesListFixed = () => {
 	const theme = usePicasso();
@@ -19,6 +20,7 @@ export const CompaniesListFixed = () => {
 	const { t: translate } = useTranslation('company-overall');
 	const { t: translateDashboard } = useTranslation('dashboard');
 	const { allUserCompanies, refetchAllUserCompanies } = useCompanies();
+	const { chain } = useNetwork();
 
 	const setInitialWidth = () => {
 		if (window.innerWidth < 1281) {
@@ -50,6 +52,10 @@ export const CompaniesListFixed = () => {
 		return <Flex />;
 	};
 
+	const filteredCompaniesByChain = allUserCompanies?.filter(
+		company => company.network === chain?.id
+	);
+
 	return (
 		<Flex direction="column" pt="10" w="100%">
 			<Flex justify="space-between" align="center">
@@ -75,14 +81,14 @@ export const CompaniesListFixed = () => {
 				</Button>
 			</Flex>
 			<Flex justify="flex-start" wrap="wrap" gap={{ md: '4', '2xl': '6' }}>
-				{allUserCompanies && allUserCompanies.length > 0 ? (
-					allUserCompanies
-						.slice(0, isFullList ? allUserCompanies?.length : flexWidth)
+				{filteredCompaniesByChain && filteredCompaniesByChain.length > 0 ? (
+					filteredCompaniesByChain
+						.slice(0, isFullList ? filteredCompaniesByChain?.length : flexWidth)
 						.map((company, index) => (
 							<Flex key={+index}>
 								<CompanyCard
 									company={company}
-									userCompanies={allUserCompanies}
+									userCompanies={filteredCompaniesByChain}
 								/>
 							</Flex>
 						))
