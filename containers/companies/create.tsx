@@ -235,7 +235,7 @@ export const CreateCompanyContainer = () => {
 			name,
 			contactEmail,
 			description,
-			network: selectedNetwork.id,
+			network: chain?.id,
 			type: selectedType,
 			socialMedia: [
 				{
