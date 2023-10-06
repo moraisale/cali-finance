@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { useCompanies, usePath, usePicasso } from 'hooks';
 import {
+	chainList,
 	getLogo,
 	handleLogoImage,
 	navigationPaths,
@@ -70,7 +71,7 @@ export const CompaniesHeaderMobile = () => {
 
 	const { write: createCompanyWrite, data: createCompanyData } =
 		useContractWrite({
-			address: (process.env.NEXT_PUBLIC_FACTORY_CONTRACT || '') as Hex,
+			address: (chainList(chain?.id)?.factory || '') as Hex,
 			abi: factoryAbi,
 			functionName: 'createNewCompany',
 		});
@@ -80,7 +81,9 @@ export const CompaniesHeaderMobile = () => {
 			setIsLoadingButton(true);
 			if (!chains.find(item => item.id === chain?.id))
 				await switchNetworkAsync?.(chains[3].id);
-			createCompanyWrite?.({ args: [selectedCompany?.checksum] });
+			createCompanyWrite?.({
+				args: [selectedCompany?.checksum, chainList(chain?.id)?.tokenAddress],
+			});
 		} catch (error) {
 			setIsLoadingButton(false);
 			if (error instanceof AxiosError) {

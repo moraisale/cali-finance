@@ -25,12 +25,12 @@ import {
 	ChangeNetworkButton,
 	SocialMediasButtons,
 } from 'components';
-import { getLogo, navigationPaths, truncateWallet } from 'utils';
+import { chainList, getLogo, navigationPaths, truncateWallet } from 'utils';
 import { INetwork } from 'types';
 import useTranslation from 'next-translate/useTranslation';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
 import { deleteCookie } from 'cookies-next';
 
 interface IMenuItem {
@@ -90,6 +90,8 @@ export const Sidebar: React.FC = () => {
 	const { disconnect } = useDisconnect();
 	const languages: ILanguage[] = ['en-US', 'pt-BR'];
 	const { onOpen } = useDisclosure();
+	const { chain } = useNetwork();
+	const { chains } = useSwitchNetwork();
 	const {
 		isOpen: isOpenMenu,
 		onOpen: onOpenMenu,
@@ -238,8 +240,8 @@ export const Sidebar: React.FC = () => {
 							{session && (
 								<ChangeNetworkButton
 									onClick={onOpen}
-									networkIcon={networkData.icon}
-									networkName={networkData.name}
+									networkIcon={chainList(chain?.id).icon}
+									networkName={chainList(chain?.id).name}
 								/>
 							)}
 						</Flex>
