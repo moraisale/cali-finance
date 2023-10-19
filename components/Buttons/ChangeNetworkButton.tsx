@@ -2,8 +2,8 @@ import { Flex, Img, Text } from '@chakra-ui/react';
 import React from 'react';
 
 interface IChangeNetworkButton {
-	networkName: string;
-	networkIcon: string;
+	networkName?: string;
+	networkIcon?: string;
 	onClick: () => void;
 }
 

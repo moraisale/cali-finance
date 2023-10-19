@@ -24,8 +24,8 @@ import { useState } from 'react';
 import { INetwork } from 'types';
 import NextLink from 'next/link';
 import useTranslation from 'next-translate/useTranslation';
-import { getLogo, truncateWallet } from 'utils';
-import { useAccount, useDisconnect, useQuery } from 'wagmi';
+import { chainList, getLogo, truncateWallet } from 'utils';
+import { useAccount, useDisconnect, useNetwork, useQuery } from 'wagmi';
 import { MobileModalLayout } from 'layouts';
 import { VscBell, VscBellDot } from 'react-icons/vsc';
 import { deleteCookie } from 'cookies-next';
@@ -53,6 +53,7 @@ export const MobileHeader = () => {
 	const { address: walletAddress, isConnected } = useAccount();
 	const { session, setSession } = useAuth();
 	const { disconnect } = useDisconnect();
+	const { chain } = useNetwork();
 	const {
 		isOpen: isOpenMenu,
 		onOpen: onOpenMenu,
@@ -151,9 +152,13 @@ export const MobileHeader = () => {
 									justifyContent="left"
 									bg="transparent"
 								>
-									<Img src={network.icon} boxSize="4" color="black" />
+									<Img
+										src={chainList(chain?.id)?.icon}
+										boxSize="4"
+										color="black"
+									/>
 									<Text bg="transparent" fontSize="sm">
-										{network.name}
+										{chainList(chain?.id)?.name}
 									</Text>
 								</Button>
 							</Flex>

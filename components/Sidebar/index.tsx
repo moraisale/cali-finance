@@ -240,8 +240,8 @@ export const Sidebar: React.FC = () => {
 							{session && (
 								<ChangeNetworkButton
 									onClick={onOpen}
-									networkIcon={chainList(chain?.id).icon}
-									networkName={chainList(chain?.id).name}
+									networkIcon={chainList(chain?.id)?.icon}
+									networkName={chainList(chain?.id)?.name}
 								/>
 							)}
 						</Flex>
