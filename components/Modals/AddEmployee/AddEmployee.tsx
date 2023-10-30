@@ -148,10 +148,7 @@ export const AddEmployee: React.FC<IAddEmployee> = ({ isOpen, onClose }) => {
 	const { data: addEmployeeData, write: addEmployeeWrite } =
 		useContractWrite(addEmployeeConfig);
 
-	const {
-		data: useWaitForTransactionData,
-		isLoading: useWaitForTransactionLoading,
-	} = useWaitForTransaction({
+	const { isLoading: useWaitForTransactionLoading } = useWaitForTransaction({
 		hash: addEmployeeData?.hash,
 		confirmations: 3,
 		onSuccess() {
@@ -188,7 +185,8 @@ export const AddEmployee: React.FC<IAddEmployee> = ({ isOpen, onClose }) => {
 			onSuccess: async () => {
 				setIsLoadingButton(true);
 				queryClient.invalidateQueries({ queryKey: ['all-company-employees'] });
-				if (chain?.id !== 137) await switchNetworkAsync?.(chains[3].id);
+				if (!chains.find(item => item.id === chain?.id))
+					await switchNetworkAsync?.(chains[3].id);
 				addEmployeeWrite?.();
 			},
 			onError: error => {

@@ -183,7 +183,8 @@ export const AddEmployeeMobile: React.FC<IAddEmployee> = ({
 			onSuccess: async () => {
 				setIsLoadingButton(true);
 				queryClient.invalidateQueries({ queryKey: ['all-company-employees'] });
-				if (chain?.id !== 137) await switchNetworkAsync?.(chains[3].id);
+				if (!chains.find(item => item.id === chain?.id))
+					await switchNetworkAsync?.(chains[3].id);
 				addEmployeeWrite?.();
 				toast({
 					position: 'top-right',

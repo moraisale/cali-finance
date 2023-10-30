@@ -7,7 +7,7 @@ import {
 	WaitMetamaskFinishTransaction,
 } from 'components';
 import { AppLayout, CompanyWhiteBackground } from 'layouts';
-import { mainClient, navigationPaths } from 'utils';
+import { chainList, mainClient, navigationPaths } from 'utils';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useTranslation from 'next-translate/useTranslation';
@@ -68,7 +68,7 @@ export const CreateCompanyContainer = () => {
 
 	const { write: createCompanyWrite, data: createCompanyData } =
 		useContractWrite({
-			address: (process.env.NEXT_PUBLIC_FACTORY_CONTRACT || '') as Hex,
+			address: (chainList(chain?.id)?.factory || '') as Hex,
 			abi: factoryAbi,
 			functionName: 'createNewCompany',
 			onError() {
@@ -79,7 +79,8 @@ export const CreateCompanyContainer = () => {
 	const createCompany = async (company: ICompany) => {
 		try {
 			setIsLoadingButton(true);
-			if (chain?.id !== 137) await switchNetworkAsync?.(chains[3].id);
+			if (!chains.find(item => item.id === chain?.id))
+				await switchNetworkAsync?.(chains[3].id);
 			const {
 				data: { checksum, id },
 			} = await mainClient.post(MAIN_SERVICE_ROUTES.createCompany, {
@@ -87,7 +88,7 @@ export const CreateCompanyContainer = () => {
 			});
 			setNewCompanyId(id);
 			createCompanyWrite?.({
-				args: [checksum, '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'],
+				args: [checksum, chainList(chain?.id)?.tokenAddress],
 			});
 		} catch (error) {
 			setIsLoadingButton(false);
