@@ -218,7 +218,7 @@ export const CreateCompanyMobileContainer = () => {
 			name,
 			contactEmail,
 			description,
-			network: selectedNetwork.id,
+			network: chain?.id,
 			type: selectedType,
 			socialMedia: [
 				{
